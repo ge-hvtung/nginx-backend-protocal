@@ -1,0 +1,31 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+
+# Folders
+bin/
+pkg/
+vendor/
+
+# Go specific
+*.exe
+*.test
+*.prof
+*.cover
+*.mod
+*.sum
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# Logs and backups
+*.log
+*.swp
+*.bak
+*.tmp
+*.orig
