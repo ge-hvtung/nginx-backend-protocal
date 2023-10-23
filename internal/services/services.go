@@ -43,7 +43,7 @@ server {
 		proxy_pass http://backend;
 	}
 }
-	`
+`
 
 func (s *NginxService) GetNginxHttp() (models.NginxHttp, error) {
 	var servers []models.NginxServer
