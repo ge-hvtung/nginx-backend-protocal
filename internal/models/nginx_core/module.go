@@ -8,5 +8,3 @@ type CoreParser interface {
 func NewCoreModule() *CoreModule {
 	return &CoreModule{}
 }
-
-
