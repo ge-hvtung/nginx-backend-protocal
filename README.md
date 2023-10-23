@@ -31,9 +31,10 @@ To run the application, follow these steps:
 The server will start listening on port 8080 by default.
 
 ## TODO
-- [ ] Nginx Configuration Parsers
-    + [ ] Server :hourglass_flowing_sand:
-    + [ ] Location :hourglass_flowing_sand:
+- [ ] :construction: Nginx Configuration Parsers
+    + [ ] :construction: Server
+    + [ ] :construction: Location
+    + [ ] :construction: Error Pages
 
 ## Contributing
 
