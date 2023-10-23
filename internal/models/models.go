@@ -17,8 +17,9 @@ type NgxUpstreamServer struct {
 }
 
 type NgxServer struct {
-	ServerName string        `json:"server_name"`
+	ServerName []string      `json:"server_name"`
 	ServerPort string        `json:"server_port"`
+	Listen     []string      `json:"listen"`
 	ProxyProps []string      `json:"proxy_props"`
 	Locations  []NgxLocation `json:"locations"`
 	Includes   []string      `json:"includes"`

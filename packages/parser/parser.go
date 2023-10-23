@@ -86,6 +86,16 @@ func (p *NgxParserImpl) ParseUpstreams() ([]models.NgxUpstream, error) {
 	return ngxUpstreams, nil
 }
 
+func (p *NgxParserImpl) GetDirectives(parent gonginx.IDirective) map[string][]string {
+	directives := make(map[string][]string)
+	// Loop through server directives
+	for _, directive := range parent.GetBlock().GetDirectives() {
+		// Add directive to map
+		directives[directive.GetName()] = directive.GetParameters()
+	}
+	return directives
+}
+
 // Func to parse all servers
 func (p *NgxParserImpl) ParseServers() ([]models.NgxServer, error) {
 	// Init parser
@@ -101,18 +111,12 @@ func (p *NgxParserImpl) ParseServers() ([]models.NgxServer, error) {
 	// Loop through servers
 	for _, server := range servers {
 		// Create map of server directives
-		serverDirectives := make(map[string][]string)
-
-		// Loop through server directives
-		for _, directive := range server.GetBlock().GetDirectives() {
-			// Add directive to map
-			serverDirectives[directive.GetName()] = directive.GetParameters()
-		}
+		serverDirectives := p.GetDirectives(server)
 
 		// Get server name from directive
 		// Create a new server
 		ngxServer := models.NgxServer{
-			ServerName: serverDirectives["server_name"][0],
+			ServerName: serverDirectives["server_name"],
 		}
 
 		// Add proxy props to server
@@ -131,15 +135,8 @@ func (p *NgxParserImpl) ParseServers() ([]models.NgxServer, error) {
 
 		// Loop through locations
 		for _, location := range locations {
-
 			// Create map of location directives
-			locationDirectives := make(map[string][]string)
-
-			// Loop through location directives
-			for _, directive := range location.GetBlock().GetDirectives() {
-				// Add directive to map
-				locationDirectives[directive.GetName()] = directive.GetParameters()
-			}
+			locationDirectives := p.GetDirectives(location)
 
 			// Get all proxy directives
 			locationProxyDirectives, err := p.GetProxyProps(locationDirectives)
@@ -262,6 +259,7 @@ func (p *NgxParserImpl) ParseLocationDirectives(location *gonginx.Directive) (mo
 
 	return ngxLocation, nil
 }
+
 // Function for parsing error_page location directives
 // error_page 404 /404.html;
 // location = /40x.html {
