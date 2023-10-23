@@ -30,12 +30,10 @@ To run the application, follow these steps:
 
 The server will start listening on port 8080 by default.
 
-## API Documentation
-
-The API documentation can be found in the `docs` directory. It contains the following files:
-
-- `users.md`: Documentation for the user endpoints.
-- `todos.md`: Documentation for the todo endpoints.
+## TODO
+- [ ] Nginx Configuration Parsers
+    + [ ] Server :hourglass_flowing_sand:
+    + [ ] Location :hourglass_flowing_sand:
 
 ## Contributing
 
