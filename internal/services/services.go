@@ -3,9 +3,10 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"galaxyed/nginx-be/internal/models"
-	"galaxyed/nginx-be/packages/parser"
 	"os"
+
+	"github.com/tunghauvan/nginx-backend-protocal/internal/models"
+	"github.com/tunghauvan/nginx-backend-protocal/packages/parser"
 )
 
 type NgxService struct {
@@ -92,7 +93,6 @@ func (s *NgxService) GetUpstreams() ([]models.NgxUpstream, error) {
 
 	return ngxUpstreams, nil
 }
-
 
 func (s *NgxService) GetServers() ([]models.NgxServer, error) {
 	// Get the nginx parser

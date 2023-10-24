@@ -2,8 +2,9 @@ package parser
 
 import (
 	"fmt"
-	"galaxyed/nginx-be/internal/models"
 	"strings"
+
+	"github.com/tunghauvan/nginx-backend-protocal/internal/models"
 
 	"github.com/tufanbarisyildirim/gonginx"
 

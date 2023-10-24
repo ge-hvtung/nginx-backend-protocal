@@ -3,7 +3,7 @@ package routers
 import (
 	"net/http"
 
-	"galaxyed/nginx-be/internal/handlers"
+	"github.com/tunghauvan/nginx-backend-protocal/internal/handlers"
 
 	"github.com/gorilla/mux"
 )

@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	"galaxyed/nginx-be/internal/config"
-	"galaxyed/nginx-be/internal/handlers"
-	"galaxyed/nginx-be/internal/routers"
-	"galaxyed/nginx-be/internal/services"
+	"github.com/tunghauvan/nginx-backend-protocal/internal/config"
+	"github.com/tunghauvan/nginx-backend-protocal/internal/handlers"
+	"github.com/tunghauvan/nginx-backend-protocal/internal/routers"
+	"github.com/tunghauvan/nginx-backend-protocal/internal/services"
 
 	"github.com/gorilla/mux"
 )

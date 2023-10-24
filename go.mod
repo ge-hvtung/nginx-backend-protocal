@@ -1,4 +1,4 @@
-module galaxyed/nginx-be
+module github.com/tunghauvan/nginx-backend-protocal
 
 go 1.21.3
 

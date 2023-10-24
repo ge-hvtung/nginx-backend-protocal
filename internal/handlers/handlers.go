@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
-	"galaxyed/nginx-be/internal/services"
 	"net/http"
+
+	"github.com/tunghauvan/nginx-backend-protocal/internal/services"
 )
 
 type Handlers struct {
