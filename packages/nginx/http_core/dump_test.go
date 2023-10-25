@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/tufanbarisyildirim/gonginx"
 	httpaccess "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
 	httpcore "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_core"
+	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 // Test Location toNginx
@@ -32,11 +34,15 @@ func TestLocationToNginx(t *testing.T) {
 
 func TestServerToNginx(t *testing.T) {
 	server_context := &httpcore.ServerContext{
-		ServerNames: []string{"localhost"},
+		ServerNames: []string{"localhost", "example.com"},
 		Listens:     []string{"80", "443"},
 	}
 	server_context.CoreProps.ClientBodyBufferSize = "128k"
 	server_context.CoreProps.ClientMaxBodySize = "1m"
+
+	// Remove Proxy Header Access-Control-Allow-Origin
+	server_context.Proxy.AddProp(httpproxy.ProxyHideHeader, "Access-Control-Allow-Origin")
+	server_context.Proxy.AddProp(httpproxy.ProxySetHeader, "Access-Control-Allow-Origin $http_origin")
 
 	// Error page
 	server_context.ErrorPageContext = httpcore.ErrorPageContext{
@@ -45,5 +51,15 @@ func TestServerToNginx(t *testing.T) {
 		Response: "=200 @error_page_404",
 	}
 
-	fmt.Println(server_context.ToNginx())
+	// Create gonginx config
+
+	conf := &gonginx.Config{
+		Block: &gonginx.Block{
+			Directives: []gonginx.IDirective{
+				server_context.ToNginx(),
+			},
+		},
+	}
+
+	fmt.Println(gonginx.DumpConfig(conf, gonginx.IndentedStyle))
 }

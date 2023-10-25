@@ -7,6 +7,8 @@ import (
 	"unicode"
 
 	"github.com/tufanbarisyildirim/gonginx"
+
+	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 // Translate location context to nginx config using gonginx
@@ -35,7 +37,7 @@ func (c *LocationContext) ToNginx() string {
 }
 
 // Dump server context to nginx config
-func (c *ServerContext) ToNginx() string {
+func (c *ServerContext) ToNginx() gonginx.IDirective {
 	// Init Empty Directives
 	directives := &Directives{}
 
@@ -67,6 +69,13 @@ func (c *ServerContext) ToNginx() string {
 	// Add CoreProps to directives
 	directives.AddCoreProps(reflect.ValueOf(c.CoreProps))
 
+	// Dump Proxy to Directive
+	proxyPropDirective := httpproxy.ProxyPropDirective{}
+	proxyPropDirective.Dump(&c.Proxy)
+	for _, directive := range proxyPropDirective.Directives {
+		directives.AddDirective(directive)
+	}
+
 	// Add error_page to directives
 	directives.AddErrorPageContext(c.ErrorPageContext)
 
@@ -77,7 +86,8 @@ func (c *ServerContext) ToNginx() string {
 		},
 	}
 
-	return gonginx.DumpDirective(&server_directive, gonginx.IndentedStyle)
+	// Return server directive as IDirective
+	return &server_directive
 }
 
 func intSliceToString(intSlice []int) string {

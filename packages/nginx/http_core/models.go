@@ -4,6 +4,7 @@ package httpcore
 
 import (
 	httpaccess "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
+	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 type HttpContext struct {
@@ -11,6 +12,9 @@ type HttpContext struct {
 	httpaccess.HttpAccessContext
 
 	ErrorPageContext
+
+	// Proxy
+	Proxy []*httpproxy.HttpProxy `json:"proxy"`
 }
 
 type ServerContext struct {
@@ -21,7 +25,8 @@ type ServerContext struct {
 	httpaccess.HttpAccessContext
 
 	// Properties
-	CoreProps ClientPropsServer `json:"core_props"`
+	CoreProps ClientPropsServer   `json:"core_props"`
+	Proxy     httpproxy.HttpProxy `json:"proxy"`
 
 	// ErrorPageContext
 	ErrorPageContext
