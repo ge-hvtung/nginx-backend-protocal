@@ -1,4 +1,4 @@
-package httpproxy
+package proxy
 
 import "github.com/tufanbarisyildirim/gonginx"
 

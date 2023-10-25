@@ -1,11 +1,11 @@
-package httpcore_test
+package core_test
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/tufanbarisyildirim/gonginx/parser"
-	httpcore "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_core"
+	core "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_core"
 )
 
 // test ParseErrorPageDirective
@@ -17,11 +17,11 @@ http {
 }`)
 	conf := p.Parse()
 
-	error_pages := []httpcore.ErrorPageContext{}
+	error_pages := []core.ErrorPageContext{}
 
 	all_error_page_directives := conf.FindDirectives("error_page")
 	for _, error_page_directive := range all_error_page_directives {
-		error_page_context, err := httpcore.ParseErrorPageDirective(error_page_directive)
+		error_page_context, err := core.ParseErrorPageDirective(error_page_directive)
 		if err != nil {
 			panic(err)
 		}
@@ -30,7 +30,7 @@ http {
 	}
 
 	// Assert output vs expected
-	expected_error_pages := []httpcore.ErrorPageContext{
+	expected_error_pages := []core.ErrorPageContext{
 		{
 			Codes: []int{404},
 			URI:   "/404.html",

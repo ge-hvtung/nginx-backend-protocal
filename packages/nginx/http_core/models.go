@@ -1,20 +1,20 @@
-package httpcore
+package core
 
 // Ref: http://nginx.org/en/docs/http/ngx_http_core_module.html
 
 import (
-	httpaccess "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
-	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
+	access "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
+	proxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 type HttpContext struct {
 	ClientPropsHttp
-	httpaccess.HttpAccessContext
+	access.HttpAccessContext
 
 	ErrorPageContext
 
 	// Proxy
-	Proxy []*httpproxy.HttpProxy `json:"proxy"`
+	Proxy []*proxy.HttpProxy `json:"proxy"`
 }
 
 type ServerContext struct {
@@ -22,11 +22,11 @@ type ServerContext struct {
 	Listens     []string `json:"listen"`
 
 	ClientPropsServer
-	httpaccess.HttpAccessContext
+	access.HttpAccessContext
 
 	// Properties
-	CoreProps ClientPropsServer   `json:"core_props"`
-	Proxy     httpproxy.HttpProxy `json:"proxy"`
+	CoreProps ClientPropsServer `json:"core_props"`
+	Proxy     proxy.HttpProxy   `json:"proxy"`
 
 	// ErrorPageContext
 	ErrorPageContext
@@ -47,7 +47,7 @@ type ClientPropsServer struct {
 
 type LocationContext struct {
 	CoreProps ClientPropsLocation `json:"core_props"`
-	httpaccess.HttpAccessContext
+	access.HttpAccessContext
 
 	// Paths
 	Location []string `json:"location"`

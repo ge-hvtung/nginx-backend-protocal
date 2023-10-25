@@ -1,4 +1,4 @@
-package httpproxy
+package proxy
 
 // Make definition for Nginx HTTP Proxy module
 // Ref: https://nginx.org/en/docs/http/ngx_http_proxy_module.html

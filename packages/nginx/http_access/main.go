@@ -1,4 +1,4 @@
-package httpaccess
+package access
 
 // Ref: http://nginx.org/en/docs/http/ngx_http_access_module.html
 

@@ -1,4 +1,4 @@
-package httpcore
+package core
 
 import (
 	"fmt"

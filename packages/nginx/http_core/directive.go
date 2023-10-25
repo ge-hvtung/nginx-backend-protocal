@@ -1,10 +1,10 @@
-package httpcore
+package core
 
 import (
 	"reflect"
 
 	"github.com/tufanbarisyildirim/gonginx"
-	httpaccess "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
+	access "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_access"
 )
 
 type Directives struct {
@@ -17,7 +17,7 @@ func (d *Directives) AddDirective(directive gonginx.IDirective) {
 }
 
 // Func add http_access  to Directives
-func (d *Directives) AddHttpAccessContext(c httpaccess.HttpAccessContext) {
+func (d *Directives) AddHttpAccessContext(c access.HttpAccessContext) {
 	// Add allow directive
 	if len(c.Allow) > 0 {
 		allow_directive := gonginx.Directive{

@@ -1,28 +1,28 @@
-package httpproxy_test
+package proxy_test
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/tufanbarisyildirim/gonginx"
-	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
+	proxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 func TestHttpProxy(t *testing.T) {
 	// Create new HttpProxy
-	httpProxy := httpproxy.HttpProxy{}
+	httpProxy := proxy.HttpProxy{}
 
 	// Add proxy prop
-	httpProxy.AddProp(httpproxy.ProxyHideHeader, "X-Frame-Options")
-	httpProxy.AddProp(httpproxy.ProxyHideHeader, "X-Content-Type-Options")
-	httpProxy.AddProp(httpproxy.ProxyHideHeader, "Content-Security-Policy")
+	httpProxy.AddProp(proxy.ProxyHideHeader, "X-Frame-Options")
+	httpProxy.AddProp(proxy.ProxyHideHeader, "X-Content-Type-Options")
+	httpProxy.AddProp(proxy.ProxyHideHeader, "Content-Security-Policy")
 
 	// Proxy Add Header
-	httpProxy.AddProp(httpproxy.ProxySetHeader, "X-Real-IP $remote_addr")
-	httpProxy.AddProp(httpproxy.ProxySetHeader, "X-Forwarded-For $proxy_add_x_forwarded_for")
+	httpProxy.AddProp(proxy.ProxySetHeader, "X-Real-IP $remote_addr")
+	httpProxy.AddProp(proxy.ProxySetHeader, "X-Forwarded-For $proxy_add_x_forwarded_for")
 
 	// Dump to Directive
-	proxyPropDirective := httpproxy.ProxyPropDirective{}
+	proxyPropDirective := proxy.ProxyPropDirective{}
 
 	proxyPropDirective.Dump(&httpProxy)
 

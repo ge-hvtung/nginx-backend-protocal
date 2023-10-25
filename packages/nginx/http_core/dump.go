@@ -1,4 +1,4 @@
-package httpcore
+package core
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 
 	"github.com/tufanbarisyildirim/gonginx"
 
-	httpproxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
+	proxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 // Translate location context to nginx config using gonginx
@@ -70,7 +70,7 @@ func (c *ServerContext) ToNginx() gonginx.IDirective {
 	directives.AddCoreProps(reflect.ValueOf(c.CoreProps))
 
 	// Dump Proxy to Directive
-	proxyPropDirective := httpproxy.ProxyPropDirective{}
+	proxyPropDirective := proxy.ProxyPropDirective{}
 	proxyPropDirective.Dump(&c.Proxy)
 	for _, directive := range proxyPropDirective.Directives {
 		directives.AddDirective(directive)
