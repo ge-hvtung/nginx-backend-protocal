@@ -6,7 +6,8 @@ import (
 	"os"
 
 	"github.com/tunghauvan/nginx-backend-protocal/internal/models"
-	"github.com/tunghauvan/nginx-backend-protocal/packages/parser"
+	httpupstream "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_upstream"
+	"github.com/tunghauvan/nginx-backend-protocal/packages/nginx/parser"
 )
 
 type NgxService struct {
@@ -75,7 +76,7 @@ func (s *NgxService) GetNginxHttpJson() ([]byte, error) {
 	return jsonBytes, nil
 }
 
-func (s *NgxService) GetUpstreams() ([]models.NgxUpstream, error) {
+func (s *NgxService) GetUpstreams() ([]httpupstream.Upstream, error) {
 	// Get the nginx parser
 	ngxParser, err := s.GetNgxParser()
 	if err != nil {

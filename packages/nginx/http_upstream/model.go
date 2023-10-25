@@ -4,6 +4,7 @@ package httpupstream
 
 // Upstream
 type Upstream struct {
+	UpstreamId   string   `json:"upstream_id"`
 	UpstreamName string   `json:"upstream_name"`
 	Servers      []Server `json:"servers"`
 	Keepalive    string   `json:"keepalive"`
@@ -14,6 +15,7 @@ type Upstream struct {
 
 // Server
 type Server struct {
+	UpstreamId      string `json:"upstream_id"`
 	Host            string `json:"host"`
 	Port            string `json:"port"`
 	Weight          int    `json:"weight"`
