@@ -15,13 +15,12 @@ import (
 
 func main() {
 	// Check if the number of arguments is correct
-	if len(os.Args) != 3 {
-		log.Fatal("Usage: go run main.go <nginx-config-file> <nginx-config-directory>")
+	if len(os.Args) != 2 {
+		log.Fatal("Usage: go run main.go <nginx-config-directory>")
 	}
 
 	// Get the arguments
-	nginxConfigFile := os.Args[1]
-	nginxConfigDir := os.Args[2]
+	nginxConfigDir := os.Args[1]
 
 	// Load configuration
 	config.GetNginxLocation()
@@ -31,7 +30,6 @@ func main() {
 
 	// Initialize services
 	ngxSvc := services.NewNgxService()
-	ngxSvc.SetConfig(nginxConfigFile)
 	ngxSvc.SetDirectory(nginxConfigDir)
 	ngxSvc.ReadNginxConfiguration()
 
