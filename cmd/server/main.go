@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/tunghauvan/nginx-backend-protocal/internal/config"
+	// "github.com/tunghauvan/nginx-backend-protocal/internal/config"
 	"github.com/tunghauvan/nginx-backend-protocal/internal/handlers"
 	"github.com/tunghauvan/nginx-backend-protocal/internal/routers"
 	"github.com/tunghauvan/nginx-backend-protocal/internal/services"
@@ -22,24 +22,21 @@ func main() {
 	// Get the arguments
 	nginxConfigDir := os.Args[1]
 
-	// Load configuration
-	config.GetNginxLocation()
-
 	// Initialize router
 	router := mux.NewRouter()
 
 	// Initialize services
-	ngxSvc := services.NewNgxService()
-	ngxSvc.SetDirectory(nginxConfigDir)
-	ngxSvc.ReadNginxConfiguration()
+	nginxService := services.NewNginxService()
+	nginxService.SetDirectory(nginxConfigDir)
+	nginxService.ReadNginxConfiguration()
 
 	// Initialize handlers
-	nginxHandler := handlers.NewHandlers(ngxSvc)
+	nginxHandler := handlers.NewHandlers(nginxService)
 
 	// Set up routes
 	routers.SetRoutes(router, nginxHandler)
 
 	// Start server
-	log.Printf("Server listening on port %s", "8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Printf("Server listening on port %s", "8000")
+	log.Fatal(http.ListenAndServe(":8000", router))
 }

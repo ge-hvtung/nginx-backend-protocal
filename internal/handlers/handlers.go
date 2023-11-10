@@ -8,14 +8,49 @@ import (
 )
 
 type Handlers struct {
-	nginxServices *services.NgxService
+	nginxServices *services.NginxService
 }
 
 // NewHandlers returns a new Handlers struct
-func NewHandlers(nginxServices *services.NgxService) *Handlers {
+func NewHandlers(nginxServices *services.NginxService) *Handlers {
 	return &Handlers{
 		nginxServices: nginxServices,
 	}
+}
+
+// Handler to get the List of Nginx files
+func (h *Handlers) GetNginxFiles(w http.ResponseWriter, r *http.Request) {
+	// Parse the "name" query parameter from the request URL
+	name := r.URL.Query().Get("name")
+	format := r.URL.Query().Get("format")
+
+	// Format Json response
+	w.Header().Add("Content-Type", "application/json")
+
+	if format == "" {
+		format = "json"
+	} 
+
+
+	if name != "" {
+		contents, err := h.nginxServices.GetNginxFile(name, format)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(contents)
+
+	} else {
+		contents, err := h.nginxServices.GetNginxFiles()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(contents)
+
+	}
+
+	// Write response
 }
 
 // Handler to get the Nginx HTTP configurations
