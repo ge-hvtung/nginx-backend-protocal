@@ -27,7 +27,7 @@ func (c *LocationContext) ToNginx() string {
 
 	location_directive := gonginx.Directive{
 		Name:       "location",
-		Parameters: c.Location,
+		Parameters: c.Paths,
 		Block: &gonginx.Block{
 			Directives: directives.Directives,
 		},
@@ -56,7 +56,7 @@ func (c *ServerContext) ToNginx() gonginx.IDirective {
 		for _, listen := range c.Listens {
 			listen_directive := gonginx.Directive{
 				Name:       "listen",
-				Parameters: []string{listen},
+				Parameters: listen.Listen,
 			}
 
 			directives.AddDirective(&listen_directive)

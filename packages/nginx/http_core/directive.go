@@ -58,23 +58,26 @@ func (d *Directives) AddCoreProps(v reflect.Value) {
 	}
 }
 
-func (d *Directives) AddErrorPageContext(c ErrorPageContext) {
-	// Add error_page directive
-	if c.URI != "" {
-		params := []string{}
-		params = append(params, intSliceToString(c.Codes))
+func (d *Directives) AddErrorPageContext(c []ErrorPageContext) {
+	for _, error_page := range c {
 
-		if c.Response != "" {
-			params = append(params, c.Response)
+		// Add error_page directive
+		if error_page.URI != "" {
+			params := []string{}
+			params = append(params, intSliceToString(error_page.Codes))
+
+			if error_page.Response != "" {
+				params = append(params, error_page.Response)
+			}
+
+			params = append(params, error_page.URI)
+
+			error_page_directive := gonginx.Directive{
+				Name:       "error_page",
+				Parameters: params,
+			}
+
+			d.Directives = append(d.Directives, &error_page_directive)
 		}
-
-		params = append(params, c.URI)
-
-		error_page_directive := gonginx.Directive{
-			Name:       "error_page",
-			Parameters: params,
-		}
-
-		d.Directives = append(d.Directives, &error_page_directive)
 	}
 }

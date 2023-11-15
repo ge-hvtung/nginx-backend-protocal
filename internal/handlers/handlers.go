@@ -29,8 +29,7 @@ func (h *Handlers) GetNginxFiles(w http.ResponseWriter, r *http.Request) {
 
 	if format == "" {
 		format = "json"
-	} 
-
+	}
 
 	if name != "" {
 		contents, err := h.nginxServices.GetNginxFile(name, format)
@@ -40,17 +39,13 @@ func (h *Handlers) GetNginxFiles(w http.ResponseWriter, r *http.Request) {
 		}
 		json.NewEncoder(w).Encode(contents)
 
-	} else {
-		contents, err := h.nginxServices.GetNginxFiles()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		json.NewEncoder(w).Encode(contents)
-
 	}
 
 	// Write response
+}
+
+func (h *Handlers) GetNginxConfiguration(w http.ResponseWriter, r *http.Request) {
+	h.nginxServices.ParseNginxConfiguration(w, r)
 }
 
 // Handler to get the Nginx HTTP configurations
@@ -68,7 +63,7 @@ func (h *Handlers) GetNginxHttp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetNgxConfig(w http.ResponseWriter, r *http.Request) {
-	h.nginxServices.ParseNginxConfiguration()
+	h.nginxServices.ParseNginxConfiguration(w, r)
 
 	// Format Json response
 	w.Header().Add("Content-Type", "application/json")

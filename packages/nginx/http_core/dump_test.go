@@ -23,10 +23,12 @@ func TestLocationToNginx(t *testing.T) {
 	location_context.CoreProps.ClientMaxBodySize = "1m"
 
 	// Error page
-	location_context.ErrorPageContext = core.ErrorPageContext{
-		Codes:    []int{404, 500},
-		URI:      "/50x.html",
-		Response: "=200 @error_page_404",
+	location_context.ErrorPageContext = []core.ErrorPageContext{
+		{
+			Codes:    []int{404, 500},
+			URI:      "/50x.html",
+			Response: "=200 @error_page_404",
+		},
 	}
 
 	fmt.Println(location_context.ToNginx())
@@ -45,10 +47,12 @@ func TestServerToNginx(t *testing.T) {
 	server_context.Proxy.AddProp(proxy.ProxySetHeader, "Access-Control-Allow-Origin $http_origin")
 
 	// Error page
-	server_context.ErrorPageContext = core.ErrorPageContext{
-		Codes:    []int{404, 500},
-		URI:      "/50x.html",
-		Response: "=200 @error_page_404",
+	server_context.ErrorPageContext = []core.ErrorPageContext{
+		{
+			Codes:    []int{404, 500},
+			URI:      "/50x.html",
+			Response: "=200 @error_page_404",
+		},
 	}
 
 	// Create gonginx config

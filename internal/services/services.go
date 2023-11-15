@@ -3,7 +3,8 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	// "log"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -85,104 +86,27 @@ func getFilePaths(dir string) ([]string, error) {
 	return paths, nil
 }
 
-// Get list of nginx files and return a slice of NginxFile structs
-func (s *NginxService) GetNginxFiles() ([]NginxFile, error) {
-	files, err := getFilePaths(s.directory)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Create a slice of NginxFile structs
-	nginxFiles := make([]NginxFile, 0)
-
-	// Loop through the files
-	for _, file := range files {
-		// Get the file name
-		file_name := file
-
-		// Skip if file ext not .conf
-		if file_name[len(file_name)-5:] != ".conf" {
-			continue
-		}
-
-		// Read file and return the contents
-		file_contents, err := os.ReadFile(file_name)
-
-		// Check for errors
-		if err != nil {
-			// Print the error and return an empty string
-			fmt.Println(err)
-			return nil, err
-		}
-
-		// Create a new NginxFile struct
-		nginxFile := NginxFile{
-			Name:    file_name,
-			Content: string(file_contents),
-		}
-
-		// Append the nginxFile to the slice
-		nginxFiles = append(nginxFiles, nginxFile)
-
-	}
-	return nginxFiles, nil
-}
-
-func (s *NginxService) GetNginxFile(file_name string, format string) (NginxFile, error) {
-	if format == "raw" {
-		// Read file and return the contents
-		file_contents, err := os.ReadFile(file_name)
-
-		// Check for errors
-		if err != nil {
-			// Print the error and return an empty string
-			fmt.Println(err)
-			return NginxFile{}, err
-		}
-
-		// Create a new NginxFile struct
-		nginxFile := NginxFile{
-			Name:    file_name,
-			Content: string(file_contents),
-		}
-
-		return nginxFile, nil
-	}
-
+func (s *NginxService) GetNginxFile(file_name string, format string) (core.HttpContext, error) {
 	if format == "json" {
 		p := package_parser.NewStringParser(s.config_contents)
 
 		conf := p.Parse()
 
-		error_pages := []core.ErrorPageContext{}
+		// Get the http directive
+		http_directive := conf.FindDirectives("http")[0]
 
-		all_error_page_directives := conf.FindDirectives("error_page")
-		for _, error_page_directive := range all_error_page_directives {
-			error_page_context, err := core.ParseErrorPageDirective(error_page_directive)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Printf("%+v\n", error_page_context)
-			error_pages = append(error_pages, error_page_context)
-		}
+		// Parse the http directive
+		httpContext, err := core.ParseHttpDirective(http_directive)
 
-		// Marshal the struct to a JSON string
-		jsonString, err := json.Marshal(error_pages)
 		if err != nil {
-			log.Println(err)
-			return NginxFile{}, err
+			return core.HttpContext{}, err
 		}
 
-		// Create a new NginxFile struct
-		nginxFile := NginxFile{
-			Name:    file_name,
-			Content: string(jsonString),
-		}
+		return httpContext, nil
 
-		return nginxFile, nil
 	}
 
-	return NginxFile{}, nil
+	return core.HttpContext{}, nil
 }
 
 func (s *NginxService) GetNginxHttp() (models.NgxHttp, error) {
@@ -190,8 +114,30 @@ func (s *NginxService) GetNginxHttp() (models.NgxHttp, error) {
 	return models.NgxHttp{}, nil
 }
 
-func (s *NginxService) ParseNginxConfiguration() {
-	// Implementation omitted for brevity
+func (s *NginxService) ParseNginxConfiguration(w http.ResponseWriter, r *http.Request) {
+	// Parse the "name" query parameter from the request URL
+	name := r.URL.Query().Get("name")
+	format := r.URL.Query().Get("format")
+
+	// Format Json response
+	w.Header().Add("Content-Type", "application/json")
+
+	if format == "" {
+		format = "json"
+	}
+
+	if format == "json" {
+		contents, err := s.GetNginxFile(name, format)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Write response
+		json.NewEncoder(w).Encode(contents)
+	}
+
 }
 
 func (s *NginxService) GetNgxParser() (parser.NgxParser, error) {

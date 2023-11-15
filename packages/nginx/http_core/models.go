@@ -15,11 +15,13 @@ type HttpContext struct {
 
 	// Proxy
 	Proxy []*proxy.HttpProxy `json:"proxy"`
+
+	Servers []*ServerContext `json:"server"` // ServerContext
 }
 
 type ServerContext struct {
-	ServerNames []string `json:"server_names"`
-	Listens     []string `json:"listen"`
+	ServerNames []string        `json:"server_names"`
+	Listens     []ListenContext `json:"listens"` // ListenContext
 
 	ClientPropsServer
 	access.HttpAccessContext
@@ -29,10 +31,21 @@ type ServerContext struct {
 	Proxy     proxy.HttpProxy   `json:"proxy"`
 
 	// ErrorPageContext
-	ErrorPageContext
+	ErrorPageContext []ErrorPageContext `json:"error_page"`
 
 	// Paths
-	Location []*LocationContext `json:"location"`
+	Locations []*LocationContext `json:"location"`
+}
+
+type ListenContext struct {
+	// Listen can be a number, IP:port, or a path
+	Listen []string `json:"listen"`
+
+	// SSL
+	SSL bool `json:"ssl"`
+
+	// Port
+	Ports []string `json:"ports"`
 }
 
 type ClientPropsServer struct {
@@ -50,10 +63,10 @@ type LocationContext struct {
 	access.HttpAccessContext
 
 	// Paths
-	Location []string `json:"location"`
+	Paths []string `json:"paths"`
 
 	// Error page
-	ErrorPageContext
+	ErrorPageContext []ErrorPageContext `json:"error_page"`
 }
 
 // define error_page
