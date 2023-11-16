@@ -23,11 +23,11 @@ func (c *LocationContext) ToNginx() string {
 	directives.AddCoreProps(reflect.ValueOf(c.CoreProps))
 
 	// Add error_page to directives
-	directives.AddErrorPageContext(c.ErrorPageContext)
+	directives.AddErrorPageContext(c.ErrorPages)
 
 	location_directive := gonginx.Directive{
 		Name:       "location",
-		Parameters: c.Paths,
+		Parameters: []string{c.Path},
 		Block: &gonginx.Block{
 			Directives: directives.Directives,
 		},

@@ -3,8 +3,10 @@ package core
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	gonginx "github.com/tufanbarisyildirim/gonginx"
+	proxy "github.com/tunghauvan/nginx-backend-protocal/packages/nginx/http_proxy"
 )
 
 // Parse error_page directive from IDirective
@@ -143,7 +145,124 @@ func ParseServerDirective(directive gonginx.IDirective) (serverContext ServerCon
 		}
 	}
 
+	// Parse directives
+	for _, directive := range directives {
+		// Parse location directive
+		if directive.GetName() == "location" {
+			// Parse location directive
+			locationContext, err := ParseLocationDirective(directive)
+			if err != nil {
+				return serverContext, err
+			}
+
+			// Add locationContext to serverContext
+			serverContext.Locations = append(serverContext.Locations, locationContext)
+		}
+	}
+
 	return serverContext, nil
+}
+
+func ParseLocationDirective(directive gonginx.IDirective) (locationContext LocationContext, err error) {
+	// Print location directive
+	fmt.Println(gonginx.DumpDirective(directive, gonginx.IndentedStyle))
+
+	// Parse this directive "location / { ... }"
+	// Return error if not starts with location
+	if directive.GetName() != "location" {
+		err = fmt.Errorf("LocationContext: directive is not location")
+		return locationContext, err
+	}
+
+	// Create a new locationContext
+	locationContext = LocationContext{}
+
+	// Get arguments
+	arguments := directive.GetParameters()
+
+	// Get path
+	locationContext.Path = arguments[0]
+
+	httpProxy := proxy.HttpProxy{}
+
+	// get proxy_pass
+	proxy_pass_directives := directive.GetBlock().FindDirectives("proxy_pass")
+
+	if len(proxy_pass_directives) > 0 {
+		httpProxy.ProxyPass = proxy_pass_directives[0].GetParameters()[0]
+	}
+
+	// get directives starting with proxy_
+	proxy_directives := directive.GetBlock().GetDirectives()
+
+	for _, proxy_directive := range proxy_directives {
+		if strings.HasPrefix(proxy_directive.GetName(), "proxy_") {
+			proxy_prop := proxy.ProxyProp{}
+			proxy_prop.Name = proxy_directive.GetName()
+
+			if proxy_directive.GetName() == "proxy_pass" {
+				httpProxy.ProxyPass = proxy_directive.GetParameters()[0]
+				continue
+			}
+
+			// value is all other arguments
+			proxy_prop.Value = strings.Join(proxy_directive.GetParameters(), " ")
+			httpProxy.Props = append(httpProxy.Props, proxy_prop)
+		}
+	}
+
+	locationContext.Proxy = httpProxy
+
+	// Get directives
+	directives := directive.GetBlock().FindDirectives("error_page")
+
+	// Parse directives
+	for _, directive := range directives {
+		// Parse error_page directive
+		if directive.GetName() == "error_page" {
+			// Parse error_page directive
+			errorPageContext, err := ParseErrorPageDirective(directive)
+			if err != nil {
+				return locationContext, err
+			}
+
+			// Add errorPageContext to locationContext
+			locationContext.ErrorPages = append(locationContext.ErrorPages, errorPageContext)
+		}
+	}
+
+	// // Get directives
+	// directives = directive.GetBlock().FindDirectives("access")
+
+	// // Parse directives
+	// for _, directive := range directives {
+	// 	// Parse access directive
+	// 	if directive.GetName() == "access" {
+	// 		// Parse access directive
+	// 		accessContext, err := ParseAccessDirective(directive)
+	// 		if err != nil {
+	// 			return locationContext, err
+	// 		}
+
+	// 		//
+	// 		locationContext.Access = accessContext
+
+	// 	}
+	// }
+
+	// Get directives
+	directives = directive.GetBlock().FindDirectives("return")
+
+	// Parse directives
+	for _, directive := range directives {
+		// Parse return directive
+		if directive.GetName() == "return" {
+
+		}
+
+	}
+
+	return locationContext, nil
 }
 
 func ParseListenDirective(directive gonginx.IDirective) (listenContext ListenContext, err error) {

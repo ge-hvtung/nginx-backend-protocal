@@ -20,32 +20,20 @@ type HttpContext struct {
 }
 
 type ServerContext struct {
-	ServerNames []string        `json:"server_names"`
-	Listens     []ListenContext `json:"listens"` // ListenContext
-
 	ClientPropsServer
 	access.HttpAccessContext
-
-	// Properties
-	CoreProps ClientPropsServer `json:"core_props"`
-	Proxy     proxy.HttpProxy   `json:"proxy"`
-
-	// ErrorPageContext
+	ServerNames      []string           `json:"server_names"`
+	Listens          []ListenContext    `json:"listens"` // ListenContext
+	CoreProps        ClientPropsServer  `json:"core_props"`
+	Proxy            proxy.HttpProxy    `json:"proxy"`
 	ErrorPageContext []ErrorPageContext `json:"error_page"`
-
-	// Paths
-	Locations []*LocationContext `json:"location"`
+	Locations        []LocationContext  `json:"location"`
 }
 
 type ListenContext struct {
-	// Listen can be a number, IP:port, or a path
 	Listen []string `json:"listen"`
-
-	// SSL
-	SSL bool `json:"ssl"`
-
-	// Port
-	Ports []string `json:"ports"`
+	SSL    bool     `json:"ssl"`
+	Ports  []string `json:"ports"`
 }
 
 type ClientPropsServer struct {
@@ -61,25 +49,17 @@ type ClientPropsServer struct {
 type LocationContext struct {
 	CoreProps ClientPropsLocation `json:"core_props"`
 	access.HttpAccessContext
-
-	// Paths
-	Paths []string `json:"paths"`
-
-	// Error page
-	ErrorPageContext []ErrorPageContext `json:"error_page"`
+	Path       string             `json:"path"`
+	ErrorPages []ErrorPageContext `json:"error_page"`
+	Proxy      proxy.HttpProxy    `json:"proxy"`
 }
 
 // define error_page
 // Syntax: error_page code ... [=[response]] uri;
 type ErrorPageContext struct {
-	// code can be a number or "*"
-	Codes []int `json:"code"`
-
-	// Return code if any
+	Codes    []int  `json:"code"`
 	Response string `json:"response"`
-
-	// uri can be text, variable, or a URI
-	URI string `json:"uri"`
+	URI      string `json:"uri"`
 }
 
 type ClientPropsHttp struct {
