@@ -36,6 +36,8 @@ The server will start listening on port 8080 by default.
     + [ ] :construction: Location
     + [ ] :construction: Error Pages
 
+- new action
+
 ## Contributing
 
 Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) before submitting a pull request.
